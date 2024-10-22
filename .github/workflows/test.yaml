@@ -1,0 +1,29 @@
+name: PnvImage
+on:
+  merge_group:
+  pull_request:
+    branches:
+      - main
+      - master
+    types:
+      - edited
+      - opened
+      - reopened
+      - synchronize
+  push:
+    tags:
+      - v*.*.*
+jobs:
+  push-images:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Version
+        id: version
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+
+      - name: Publish PnV Images
+        if: "!contains(steps.version.outputs.version, 'gh-readonly-queue') && github.event.pull_request == ''"
+        run: |
+          echo lol
